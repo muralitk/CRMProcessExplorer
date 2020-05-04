@@ -35,8 +35,11 @@
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbProcess = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.tsbCSV = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.tsbAbout = new System.Windows.Forms.ToolStripButton();
             this.gbRecord = new System.Windows.Forms.GroupBox();
+            this.btnWFE = new System.Windows.Forms.Button();
             this.txtName = new System.Windows.Forms.LinkLabel();
             this.btnSearch = new System.Windows.Forms.Button();
             this.lblName = new System.Windows.Forms.Label();
@@ -67,8 +70,6 @@
             this.dtFrom = new System.Windows.Forms.DateTimePicker();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
-            this.tsbCSV = new System.Windows.Forms.ToolStripButton();
-            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenu.SuspendLayout();
             this.gbRecord.SuspendLayout();
             this.gbMain.SuspendLayout();
@@ -132,6 +133,21 @@
             this.toolStripSeparator2.Name = "toolStripSeparator2";
             this.toolStripSeparator2.Size = new System.Drawing.Size(6, 31);
             // 
+            // tsbCSV
+            // 
+            this.tsbCSV.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbCSV.Image = ((System.Drawing.Image)(resources.GetObject("tsbCSV.Image")));
+            this.tsbCSV.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbCSV.Name = "tsbCSV";
+            this.tsbCSV.Size = new System.Drawing.Size(28, 28);
+            this.tsbCSV.Text = "Export 2 CSV";
+            this.tsbCSV.Click += new System.EventHandler(this.tsbCSV_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 31);
+            // 
             // tsbAbout
             // 
             this.tsbAbout.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -146,6 +162,7 @@
             // 
             this.gbRecord.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.gbRecord.Controls.Add(this.btnWFE);
             this.gbRecord.Controls.Add(this.txtName);
             this.gbRecord.Controls.Add(this.btnSearch);
             this.gbRecord.Controls.Add(this.lblName);
@@ -160,6 +177,19 @@
             this.gbRecord.TabIndex = 5;
             this.gbRecord.TabStop = false;
             this.gbRecord.Text = "Processes by record";
+            // 
+            // btnWFE
+            // 
+            this.btnWFE.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnWFE.Enabled = false;
+            this.btnWFE.Image = ((System.Drawing.Image)(resources.GetObject("btnWFE.Image")));
+            this.btnWFE.Location = new System.Drawing.Point(1199, 45);
+            this.btnWFE.Name = "btnWFE";
+            this.btnWFE.Size = new System.Drawing.Size(25, 24);
+            this.btnWFE.TabIndex = 22;
+            this.btnWFE.UseVisualStyleBackColor = true;
+            this.btnWFE.Visible = false;
+            this.btnWFE.Click += new System.EventHandler(this.btnWFE_Click);
             // 
             // txtName
             // 
@@ -178,11 +208,11 @@
             // 
             this.btnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnSearch.Enabled = false;
-            this.btnSearch.Location = new System.Drawing.Point(1119, 45);
+            this.btnSearch.Image = ((System.Drawing.Image)(resources.GetObject("btnSearch.Image")));
+            this.btnSearch.Location = new System.Drawing.Point(1168, 45);
             this.btnSearch.Name = "btnSearch";
-            this.btnSearch.Size = new System.Drawing.Size(105, 23);
+            this.btnSearch.Size = new System.Drawing.Size(25, 24);
             this.btnSearch.TabIndex = 20;
-            this.btnSearch.Text = "Search";
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
@@ -214,11 +244,11 @@
             // btnRetrieveEntities
             // 
             this.btnRetrieveEntities.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRetrieveEntities.Location = new System.Drawing.Point(1119, 17);
+            this.btnRetrieveEntities.Image = ((System.Drawing.Image)(resources.GetObject("btnRetrieveEntities.Image")));
+            this.btnRetrieveEntities.Location = new System.Drawing.Point(1168, 17);
             this.btnRetrieveEntities.Name = "btnRetrieveEntities";
-            this.btnRetrieveEntities.Size = new System.Drawing.Size(105, 23);
+            this.btnRetrieveEntities.Size = new System.Drawing.Size(25, 23);
             this.btnRetrieveEntities.TabIndex = 15;
-            this.btnRetrieveEntities.Text = "Retrieve Entities";
             this.btnRetrieveEntities.UseVisualStyleBackColor = true;
             this.btnRetrieveEntities.Click += new System.EventHandler(this.btnRetrieveEntities_Click);
             // 
@@ -238,7 +268,7 @@
             this.cboEntities.FormattingEnabled = true;
             this.cboEntities.Location = new System.Drawing.Point(137, 19);
             this.cboEntities.Name = "cboEntities";
-            this.cboEntities.Size = new System.Drawing.Size(976, 21);
+            this.cboEntities.Size = new System.Drawing.Size(1025, 21);
             this.cboEntities.Sorted = true;
             this.cboEntities.TabIndex = 0;
             this.cboEntities.SelectedIndexChanged += new System.EventHandler(this.cboEntities_SelectedIndexChanged);
@@ -480,30 +510,15 @@
             this.label3.TabIndex = 14;
             this.label3.Text = "From:";
             // 
-            // tsbCSV
-            // 
-            this.tsbCSV.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.tsbCSV.Image = ((System.Drawing.Image)(resources.GetObject("tsbCSV.Image")));
-            this.tsbCSV.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.tsbCSV.Name = "tsbCSV";
-            this.tsbCSV.Size = new System.Drawing.Size(28, 28);
-            this.tsbCSV.Text = "Export 2 CSV";
-            this.tsbCSV.Click += new System.EventHandler(this.tsbCSV_Click);
-            // 
-            // toolStripSeparator3
-            // 
-            this.toolStripSeparator3.Name = "toolStripSeparator3";
-            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 31);
-            // 
             // PluginControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.Controls.Add(this.gbDates);
             this.Controls.Add(this.gbChoice);
             this.Controls.Add(this.gbMain);
             this.Controls.Add(this.gbRecord);
             this.Controls.Add(this.toolStripMenu);
+            this.Controls.Add(this.gbDates);
             this.Name = "PluginControl";
             this.Size = new System.Drawing.Size(1236, 483);
             this.Load += new System.EventHandler(this.MyPluginControl_Load);
@@ -566,5 +581,6 @@
         private System.Windows.Forms.RadioButton rbPTL;
         private System.Windows.Forms.ToolStripButton tsbCSV;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+        private System.Windows.Forms.Button btnWFE;
     }
 }

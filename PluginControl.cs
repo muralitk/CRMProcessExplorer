@@ -15,14 +15,17 @@ using Microsoft.Xrm.Sdk.Metadata;
 using System.Xml;
 using System.Xml.Linq;
 using System.IO;
+using XrmToolBox.Extensibility.Interfaces;
 
 namespace CRMProcessExplorer
 {
-    public partial class PluginControl : PluginControlBase
+    public partial class PluginControl : PluginControlBase, IGitHubPlugin
     {
         private Settings mySettings;
         private EntityDetail entityDetail;
         private string _layoutXml = string.Empty;
+
+        private ProcessDetailTN _selectedNode = null;
 
         public PluginControl()
         {
@@ -228,6 +231,7 @@ namespace CRMProcessExplorer
         private void cboEntities_SelectedIndexChanged(object sender, EventArgs e)
         {
             btnSearch.Enabled = cboEntities.SelectedItem != null;
+            btnWFE.Enabled = cboEntities.SelectedItem != null;
             txtID.Text = string.Empty;
             txtName.Text = string.Empty;
             dgvMain.Rows.Clear();
@@ -753,5 +757,97 @@ namespace CRMProcessExplorer
                 MessageBox.Show("No Record To Export !!!", "Info");
             }
         }
+
+        private void btnWFE_Click(object sender, EventArgs e)
+        {
+            entityDetail = ((EntityDetail)cboEntities.SelectedItem);
+            WorkAsync(new WorkAsyncInfo
+            {
+                Message = "Getting Process Info...",
+                AsyncArgument = null,
+                Work = (worker, args) =>
+                {
+                    using (var cpm = new CRMProcessExplorerManager(this.Service))
+                    {
+                        args.Result = cpm.GetWorkflowsByEntity(entityDetail);
+                    }
+                },
+                ProgressChanged = (args) =>
+                {
+                    SetWorkingMessage(args.UserState.ToString());
+                },
+                PostWorkCallBack = (args) =>
+                {
+                    if (args.Error != null)
+                    {
+                        MessageBox.Show(args.Error.ToString(), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                    var result = args.Result as List<ProcessDetail>;
+
+                    var rootComponent = new ProcessDetailTN();
+                    rootComponent.Type = ProcessDetail.eTypes.Entity;
+                    rootComponent.Text = entityDetail.DisplayName;
+                    result.ForEach(pd =>
+                    {
+                        AppendProcessNode(rootComponent, pd, 5);
+                    });
+                    _selectedNode = rootComponent;
+
+                    var pdf = new ProcessDiagram(((EntityDetail)cboEntities.SelectedItem), _selectedNode);
+                    pdf.StartPosition = FormStartPosition.CenterParent;
+                    pdf.Show();
+                }
+            });
+        }
+
+        private void AppendProcessNode(ProcessDetailTN node, ProcessDetail pd, int depth)
+        {
+            depth--;
+            if (depth < 0) return;
+
+            var  childNode = new ProcessDetailTN();
+            childNode.Text = pd.Name;
+            childNode.Id = pd.Id;
+            childNode.Category = pd.Category;
+            childNode.Type = pd.Type;
+            childNode.PrimaryEntityName = pd.PrimaryEntityName;
+
+            node.Nodes.Add(childNode);
+            childNode.IsVisited = IsComponentVisited(childNode, childNode.Id);
+
+            if (!childNode.IsVisited)
+            {
+                foreach (var cpd in pd.ChildProcess)
+                {
+                    AppendProcessNode(childNode, cpd, depth);
+                }
+            }
+        }
+
+        private bool IsComponentVisited(ProcessDetailTN node, Guid id)
+        {
+            var parent = (ProcessDetailTN)node.Parent;
+            if (parent != null)
+            {
+                if (parent.Id == id)
+                    return true;
+                else
+                    return IsComponentVisited(parent, id);
+            }
+
+            return false;
+        }
+
+        #region Github implementation
+        public string RepositoryName
+        {
+            get { return "CRMProcessExplorer"; }
+        }
+
+        public string UserName
+        {
+            get { return "muralitk"; }
+        }
+        #endregion Github implementation
     }
 }
