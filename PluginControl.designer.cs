@@ -67,6 +67,8 @@
             this.dtFrom = new System.Windows.Forms.DateTimePicker();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
+            this.tsbCSV = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripMenu.SuspendLayout();
             this.gbRecord.SuspendLayout();
             this.gbMain.SuspendLayout();
@@ -86,6 +88,8 @@
             this.toolStripSeparator1,
             this.tsbProcess,
             this.toolStripSeparator2,
+            this.tsbCSV,
+            this.toolStripSeparator3,
             this.tsbAbout});
             this.toolStripMenu.Location = new System.Drawing.Point(0, 0);
             this.toolStripMenu.Name = "toolStripMenu";
@@ -476,6 +480,21 @@
             this.label3.TabIndex = 14;
             this.label3.Text = "From:";
             // 
+            // tsbCSV
+            // 
+            this.tsbCSV.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsbCSV.Image = ((System.Drawing.Image)(resources.GetObject("tsbCSV.Image")));
+            this.tsbCSV.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsbCSV.Name = "tsbCSV";
+            this.tsbCSV.Size = new System.Drawing.Size(28, 28);
+            this.tsbCSV.Text = "Export 2 CSV";
+            this.tsbCSV.Click += new System.EventHandler(this.tsbCSV_Click);
+            // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 31);
+            // 
             // PluginControl
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -545,5 +564,7 @@
         private System.Windows.Forms.RadioButton rbDates;
         private System.Windows.Forms.RadioButton rbRecord;
         private System.Windows.Forms.RadioButton rbPTL;
+        private System.Windows.Forms.ToolStripButton tsbCSV;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
     }
 }

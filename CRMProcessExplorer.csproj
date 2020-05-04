@@ -170,6 +170,7 @@
     <Content Include="Images\About.jpg" />
     <Content Include="Images\bgp.jpg" />
     <Content Include="Images\close.png" />
+    <Content Include="Images\csv.png" />
     <Content Include="Images\ProcessExplorer.ico" />
     <Content Include="Images\rtp.png" />
   </ItemGroup>

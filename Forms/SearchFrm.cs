@@ -138,7 +138,7 @@ namespace CRMProcessExplorer
                     ch.Name = FixLinkEntityHeader(fetchDoc, ch.Name);
             }
             // primary id field
-            dgvSearch.Columns[loop].Name = "pki";
+            dgvSearch.Columns[loop].Name = metadata.PrimaryIdAttribute;
             dgvSearch.Columns[loop].Visible = false;
             // primary name field
             dgvSearch.Columns[++loop].Name = "pkn";

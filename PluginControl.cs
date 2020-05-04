@@ -375,7 +375,7 @@ namespace CRMProcessExplorer
                 }
             }
             // primary id field
-            dgvMain.Columns[loop].Name = "pki";
+            dgvMain.Columns[loop].Name = entityDetail.Metadata.PrimaryIdAttribute;
             dgvMain.Columns[loop].Visible = false;
             // primary name field
             dgvMain.Columns[++loop].Name = "pkn";
@@ -700,6 +700,58 @@ namespace CRMProcessExplorer
                 return false;
             }
             return true;
+        }
+
+        private void tsbCSV_Click(object sender, EventArgs e)
+        {
+            if (dgvMain.Rows.Count > 0)
+            {
+                var sfd = new SaveFileDialog();
+                sfd.Filter = "CSV (*.csv)|*.csv";
+                sfd.FileName = $"Process Info {DateTime.Now.ToString("yyyyMMddTHHmmss")}.csv";
+                bool fileError = false;
+                if (sfd.ShowDialog() == DialogResult.OK)
+                {
+                    if (File.Exists(sfd.FileName))
+                    {
+                        try
+                        {
+                            File.Delete(sfd.FileName);
+                        }
+                        catch (IOException ex)
+                        {
+                            fileError = true;
+                            MessageBox.Show("It wasn't possible to write the data to the disk." + ex.Message);
+                        }
+                    }
+                    if (!fileError)
+                    {
+                        try
+                        {
+                            var sb = new StringBuilder();
+
+                            var headers = dgvMain.Columns.Cast<DataGridViewColumn>();
+                            sb.AppendLine(string.Join(",", headers.Take(headers.Count() - 2).Select(column => "\"" + column.HeaderText + "\"").ToArray()));
+
+                            foreach (DataGridViewRow row in dgvMain.Rows)
+                            {
+                                var cells = row.Cells.Cast<DataGridViewCell>();
+                                sb.AppendLine(string.Join(",", cells.Take(headers.Count() - 2).Select(cell => "\"" + (cell.Value != null ? cell.Value.ToStringNullSafe().Replace("\"", "\'")  : string.Empty)  + "\"").ToArray()));
+                            }
+                            File.WriteAllText(sfd.FileName, sb.ToString(), Encoding.UTF8);
+                            MessageBox.Show("Data Exported Successfully !!!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Error :" + ex.Message);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("No Record To Export !!!", "Info");
+            }
         }
     }
 }

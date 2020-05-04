@@ -187,6 +187,29 @@
         PyL08b1HHmO14n9YH+z34zBDSAAAAABJRU5ErkJggg==
 </value>
   </data>
+  <data name="tsbCSV.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        iVBORw0KGgoAAAANSUhEUgAAABwAAAAcCAYAAAByDd+UAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
+        YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAP6SURBVEhLvVZdbBRVGN22iA8IUYzZe2e2W4WqSRMb+Yvw
+        gA0mGIyPsgQEUkVL7e7eGbA+mPiwD00g0gclEGJQbMsuszOzMRCijT4YwZ8YQKMWYowPKCrgTwLpE8Ro
+        6zl3dsqwrjBbGyY5uXfu9805997vu9+dRKFQaM5kMi0hEnhsV2Tsihi3Ksk/7Ery93gQ48BZy5GryRHl
+        DEEtbejq6poVgs5WWT5neXIs75hPAo/dDOqQ6LJdOWj7YtLy5bd2STyaSEw2RXkJav23oC+P9x9MzuF7
+        nMf2k8/YvpzUop74jpOoFb2xoCc+3ri7fV6tvR74jfKMLRQLcU200Bz6zagg/DdB6IrtiasB5ATaD7a8
+        +uDckGPGBDOJTEt2qE2osnxcOWINEweJtxNb/HnfvvRdtGu/mRIkNFnkQcZmsMLPYgkqVz7fqGAU5LBc
+        Y318Qc9Yh2NR2TTYiSydbGLg4yDkakiw5420tEvGw/miXGm9bd6fPZhqj4vcHuNuTRpHkC0zCit7B9v5
+        C5x/tnzxE7LtR90Pxs4RwXjQhn1k6HkmSnxBDNIIwRPBOZJjliuyeUduwPvXEPyKyaScZI4+liO2o/0I
+        qMC2A4Xib1SbYXI1JIhUPgmMq5K5KnfIWKHK4iV8+A1Iu1XRTGES/RA5g3aZzcNeFk/A9oKepCuHpiP4
+        BQl7immJ7TpMIg1XvM74kgj230D2Yu9wytSTQBimLYiPTzEuTAKI9KL/PuOH8VEQ9Kni/HmY1DGMH926
+        dcltqty6UMf5fwgGMXTF/r5hszOLjMXYh4hfXhXTHcox10LwV5Cdy420LlU4s3j/s54gJvVp92ttd9YX
+        REsjnfQWevIvCF0gMd6vMK4YO1ttJ7QIMxXbqxOGgp54U5PGEdQDhY7ZrPCY9UYCq3qaYKYSYZ+t9imL
+        zdoH5BxXjrGoIUGCzspNrsLMB9Ro++18jz7bXLkYKylhhR58KljlKwW/Y3ZgDa4i9q4TrGrcQBBx8cQn
+        tbWUtnwZF60nsKXVe88XX+oKU11F6NeQILap7m1B2y0T5BFgIQfRs7WC6kD7PUtgv45jOoLZvR13BLcF
+        thkJgZiNAPrYRHAJEziCTH15jWLMeXNUb5zGBOWpXCn1kBpuXUiwD4KjNWJVoBQi7n0H0gvo2zvUdi+y
+        1ootiNWsw1m7CKLTmD3qqBxD/5jlGd16LCLGM4gDv4sI/fU3vvwB341Gw1JXkO+64hRTy1AnlxO2Yz7C
+        lv8tqEBPYbsvTwl68t3cW62G5ZidoX+I3IjxAGMf5f6X4JRBx64WhWYSQGRAVxtPfM/Y1vclrv0iTvHW
+        /urfDNjxJsu5L4ntew+iPQxBPb/6yLT8A4Jtt1OAv6xTAAAAAElFTkSuQmCC
+</value>
+  </data>
   <data name="tsbAbout.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAEEAAAA/CAYAAAC/36X0AAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8
@@ -350,7 +373,34 @@
   <metadata name="cboEntities.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <metadata name="txtName.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="btnSearch.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="lblName.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="lblID.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="txtID.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="btnRetrieveEntities.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="lblEntityName.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="cboEntities.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <metadata name="gbMain.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="dgvMain.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <metadata name="dgvMain.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -360,6 +410,21 @@
     <value>True</value>
   </metadata>
   <metadata name="panel2.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="panel1.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="lblInfo.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="panel2.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="rbDates.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="rbRecord.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <metadata name="rbDates.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
@@ -380,10 +445,49 @@
   <metadata name="rbBGP.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
+  <metadata name="rbPTL.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="rbRTP.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="rbBGP.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <metadata name="lblInfo.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <metadata name="gbDates.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="lblState.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="cboState.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="lblStatus.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="cboStatus.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="lblOperationType.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="cbOperationType.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="dtTo.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="dtFrom.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="label2.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="label3.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
   <metadata name="lblState.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
