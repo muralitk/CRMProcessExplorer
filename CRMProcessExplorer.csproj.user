@@ -3,7 +3,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <StartAction>Program</StartAction>
     <StartProgram>C:\Users\Murali.TharailKunnat\Downloads\CEWA\Murali\Local\XrmToolboxApps\CRMProcessExplorer\CRMProcessExplorer\bin\Debug\XrmToolBox.exe</StartProgram>
-    <StartArguments>/overridepath:. /plugin:"CRM Process Explorer"</StartArguments>
+    <StartArguments>/overridepath:. /connection:"MFA-UAT" /plugin:"CRM Process Explorer"</StartArguments>
   </PropertyGroup>
   <PropertyGroup>
     <ProjectView>ProjectFiles</ProjectView>

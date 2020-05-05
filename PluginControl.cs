@@ -55,8 +55,17 @@ namespace CRMProcessExplorer
                 LogInfo("Settings found and loaded");
             }
 
-            dgvMain.CellMouseEnter += new System.Windows.Forms.DataGridViewCellEventHandler(dgvMain_CellMouseEnter);
-            dgvMain.CellMouseLeave += new System.Windows.Forms.DataGridViewCellEventHandler(dgvMain_CellMouseLeave);
+            dgvMain.CellMouseEnter += new DataGridViewCellEventHandler(dgvMain_CellMouseEnter);
+            dgvMain.CellMouseLeave += new DataGridViewCellEventHandler(dgvMain_CellMouseLeave);
+
+            var toolTip = new ToolTip();
+            toolTip.SetToolTip(this.btnSearch, "Search");
+            toolTip.SetToolTip(this.btnRetrieveEntities, "Retrieve Entities");
+            toolTip.SetToolTip(this.btnWFE, "Show Process Hierarchy Diagram");
+
+            txtID.Text = "GUID here...";
+            txtID.GotFocus += new EventHandler(RemoveText);
+            txtID.LostFocus += new EventHandler(AddText);
         }
 
         private void tsbClose_Click(object sender, EventArgs e)
@@ -232,7 +241,7 @@ namespace CRMProcessExplorer
         {
             btnSearch.Enabled = cboEntities.SelectedItem != null;
             btnWFE.Enabled = cboEntities.SelectedItem != null;
-            txtID.Text = string.Empty;
+            //txtID.Text = string.Empty;
             txtName.Text = string.Empty;
             dgvMain.Rows.Clear();
             dgvMain.Refresh();
@@ -243,7 +252,37 @@ namespace CRMProcessExplorer
             lblInfo.Visible = false;
             dgvMain.Rows.Clear();
             dgvMain.Refresh();
-            if (rbRecord.Enabled && rbRecord.Checked && string.IsNullOrEmpty(txtID.Text.Trim())) return;
+            if (rbRecord.Enabled && rbRecord.Checked && (string.IsNullOrEmpty(txtID.Text.Trim()) || txtID.Text.Trim().Equals("GUID here..."))) return;
+
+            var id = new Guid();
+            if (rbRecord.Enabled && rbRecord.Checked && Guid.TryParse(txtID.Text.Trim(), out id))
+            {
+                if (string.IsNullOrEmpty(txtName.Text) && cboEntities.SelectedItem != null)
+                {
+                    var md = ((EntityDetail)cboEntities.SelectedItem).Metadata;
+                    using (var cpm = new CRMProcessExplorerManager(Service))
+                    {
+                        var name = string.Empty;
+                        if (cpm.GetEntityRecordInfo(md.LogicalName, md.PrimaryNameAttribute, id, out name))
+                            txtName.Text = name;
+                        else
+                        {
+                            txtID.Text = string.Empty;
+                            return;
+                        }
+                    }
+                }
+                else if (string.IsNullOrEmpty(txtName.Text) && cboEntities.SelectedItem == null)
+                {
+                    MessageBox.Show(this, $"Populate the entities and select the entity you want to view the process!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+            }
+            else if (rbRecord.Enabled && rbRecord.Checked && !string.IsNullOrEmpty(txtID.Text.Trim()))
+            {
+                MessageBox.Show(this, $"Invalid ID: {txtID.Text}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
 
             WorkAsync(new WorkAsyncInfo
             {
@@ -393,16 +432,21 @@ namespace CRMProcessExplorer
         {
             if (!rbRecord.Checked) return;
             if (!IsCheckConnection()) return;
+            ShowHideFilters();
 
             lblInfo.Visible = false;
             gbRecord.Visible = true;
             gbDates.Visible = false;
+
+            ExecuteMethod(InitilizeDataGridView);
+            if (dgvMain.ColumnCount > 0) ExecuteMethod(LoadDataGridView);
         }
 
         private void rbDates_CheckedChanged(object sender, EventArgs e)
         {
             if (!rbDates.Checked) return;
             if (!IsCheckConnection()) return;
+            ShowHideFilters();
 
             lblInfo.Visible = false;
             gbDates.Visible = true;
@@ -418,12 +462,11 @@ namespace CRMProcessExplorer
                 {
                     using (var cpm = new CRMProcessExplorerManager(this.Service))
                     {
-                        if (entityDetail == null)
-                        {
-                            var em = cpm.GetEntities("asyncoperation").FirstOrDefault();
-                            entityDetail = new EntityDetail(em);
-                        }
-
+                        //if (entityDetail == null)
+                        //{
+                        //    var em = cpm.GetEntities("asyncoperation").FirstOrDefault();
+                        //    entityDetail = new EntityDetail(em);
+                        //}
                         if (cbOperationType.Items.Count <= 0)
                         {
                             args.Result = cpm.GetStringMap("asyncoperation", "operationtype");
@@ -454,7 +497,8 @@ namespace CRMProcessExplorer
                 }
             });
 
-            if (dgvMain.ColumnCount <= 0) ExecuteMethod(InitilizeDataGridView);
+            ExecuteMethod(InitilizeDataGridView);
+            if (dgvMain.ColumnCount > 0) ExecuteMethod(LoadDataGridView);
         }
 
         private void LoadState()
@@ -613,9 +657,6 @@ namespace CRMProcessExplorer
                 rbRecord_CheckedChanged(sender, e);
             else
                 rbDates_CheckedChanged(sender, e);
-
-            ExecuteMethod(InitilizeDataGridView);
-            if (rbDates.Checked && dgvMain.ColumnCount > 0) ExecuteMethod(LoadDataGridView);
         }
 
         private void rbRTP_CheckedChanged(object sender, EventArgs e)
@@ -631,9 +672,6 @@ namespace CRMProcessExplorer
                 rbRecord_CheckedChanged(sender, e);
             else
                 rbDates_CheckedChanged(sender, e);
-
-            ExecuteMethod(InitilizeDataGridView);
-            if (rbDates.Checked && dgvMain.ColumnCount > 0) ExecuteMethod(LoadDataGridView);
         }
 
         private void rbPTL_CheckedChanged(object sender, EventArgs e)
@@ -647,7 +685,7 @@ namespace CRMProcessExplorer
             ShowHideFilters();
 
             ExecuteMethod(InitilizeDataGridView);
-            if (rbDates.Checked && dgvMain.ColumnCount > 0) ExecuteMethod(LoadDataGridView);
+            if (dgvMain.ColumnCount > 0) ExecuteMethod(LoadDataGridView);
         }
 
         private void ShowHideFilters()
@@ -712,7 +750,7 @@ namespace CRMProcessExplorer
             {
                 var sfd = new SaveFileDialog();
                 sfd.Filter = "CSV (*.csv)|*.csv";
-                sfd.FileName = $"Process Info {DateTime.Now.ToString("yyyyMMddTHHmmss")}.csv";
+                sfd.FileName = $"{entityDetail.DisplayName} {DateTime.Now.ToString("yyyyMMddTHHmmss")}.csv";
                 bool fileError = false;
                 if (sfd.ShowDialog() == DialogResult.OK)
                 {
@@ -725,7 +763,7 @@ namespace CRMProcessExplorer
                         catch (IOException ex)
                         {
                             fileError = true;
-                            MessageBox.Show("It wasn't possible to write the data to the disk." + ex.Message);
+                            MessageBox.Show("It wasn't possible to write the data to the disk." + ex.Message, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
                     }
                     if (!fileError)
@@ -747,19 +785,21 @@ namespace CRMProcessExplorer
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show("Error :" + ex.Message);
+                            MessageBox.Show("Error :" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
             }
             else
             {
-                MessageBox.Show("No Record To Export !!!", "Info");
+                MessageBox.Show("No Record To Export !!!", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
         private void btnWFE_Click(object sender, EventArgs e)
         {
+            if (cboEntities.SelectedItem == null || this.Service == null) return;
+
             entityDetail = ((EntityDetail)cboEntities.SelectedItem);
             WorkAsync(new WorkAsyncInfo
             {
@@ -786,14 +826,16 @@ namespace CRMProcessExplorer
 
                     var rootComponent = new ProcessDetailTN();
                     rootComponent.Type = ProcessDetail.eTypes.Entity;
+                    rootComponent.PrimaryEntityName = entityDetail.LogicalName;
                     rootComponent.Text = entityDetail.DisplayName;
+                    rootComponent.Id = entityDetail.Metadata.MetadataId.Value;
                     result.ForEach(pd =>
                     {
-                        AppendProcessNode(rootComponent, pd, 5);
+                        AppendProcessNode(rootComponent, pd, 6);
                     });
                     _selectedNode = rootComponent;
 
-                    var pdf = new ProcessDiagram(((EntityDetail)cboEntities.SelectedItem), _selectedNode);
+                    var pdf = new ProcessDiagram(entityDetail, _selectedNode, this.ConnectionDetail.WebApplicationUrl);
                     pdf.StartPosition = FormStartPosition.CenterParent;
                     pdf.Show();
                 }
@@ -838,6 +880,19 @@ namespace CRMProcessExplorer
             return false;
         }
 
+        private void RemoveText(object sender, EventArgs e)
+        {
+            if (txtID.Text == "GUID here...")
+                txtID.Text = string.Empty;
+        }
+
+        private void AddText(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtID.Text))
+                txtID.Text = "GUID here...";
+        }
+
+
         #region Github implementation
         public string RepositoryName
         {
@@ -849,5 +904,10 @@ namespace CRMProcessExplorer
             get { return "muralitk"; }
         }
         #endregion Github implementation
+
+        private void txtID_TextChanged(object sender, EventArgs e)
+        {
+            txtName.Text = "";
+        }
     }
 }

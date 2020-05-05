@@ -134,6 +134,7 @@
   <ItemGroup>
     <Compile Include="Business Logic\ClassContainer.cs" />
     <Compile Include="Business Logic\CRMProcessExplorerManager.cs" />
+    <Compile Include="Business Logic\DiagramBuilder.cs" />
     <Compile Include="CRMProcessExplorerPlugin.cs" />
     <Compile Include="Business Logic\Helper.cs" />
     <Compile Include="Forms\MsgFrm.cs">
@@ -141,6 +142,12 @@
     </Compile>
     <Compile Include="Forms\MsgFrm.Designer.cs">
       <DependentUpon>MsgFrm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ProcessDiagram.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ProcessDiagram.Designer.cs">
+      <DependentUpon>ProcessDiagram.cs</DependentUpon>
     </Compile>
     <Compile Include="PluginControl.cs">
       <SubType>UserControl</SubType>
@@ -173,10 +180,14 @@
     <Content Include="Images\csv.png" />
     <Content Include="Images\ProcessExplorer.ico" />
     <Content Include="Images\rtp.png" />
+    <Content Include="Images\workflow.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\MsgFrm.resx">
       <DependentUpon>MsgFrm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ProcessDiagram.resx">
+      <DependentUpon>ProcessDiagram.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PluginControl.resx">
       <DependentUpon>PluginControl.cs</DependentUpon>

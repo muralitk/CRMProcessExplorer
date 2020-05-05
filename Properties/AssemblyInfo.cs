@@ -7,7 +7,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("CRMProcessExplorer")]
-[assembly: AssemblyDescription("Using this tool you can view Background, Real-time & Plug-in Trace Logs by records/by dates. Double clicking the record/column will open relevent CRM forms also double clicking the column (long messages) will open up a pop-up view with full details.")]
+[assembly: AssemblyDescription("Using this tool you can view Background/Real-time Processes & Plug-in Trace Logs by records/by dates. Double clicking the record/column will open relevent CRM forms also double clicking the column (long messages) will open up a pop-up view with full details. You can even export the results in .csv file. View process hierarchy by entity.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Murali TK")]
 [assembly: AssemblyProduct("CRMProcessExplorer")]
@@ -33,6 +33,6 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.2020.5.3")]
-[assembly: AssemblyFileVersion("1.2020.5.3")]
+[assembly: AssemblyVersion("2.2020.5.7")]
+[assembly: AssemblyFileVersion("2.2020.5.7")]
 [assembly: NeutralResourcesLanguage("en-AU")]

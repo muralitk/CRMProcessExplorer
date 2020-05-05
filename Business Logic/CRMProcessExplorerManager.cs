@@ -59,6 +59,19 @@ namespace CRMProcessExplorer
             this.Service = service;
         }
 
+        public bool GetEntityRecordInfo(string entityName, string primaryFieldName, Guid entityId, out string value)
+        {
+            value = string.Empty;
+            var record = Service.RetrieveSafe(entityName, entityId, new ColumnSet(primaryFieldName));
+            if (record != null)
+            {
+                value = record.GetAttributeValueSafe<string>(primaryFieldName);
+                return true;
+            }
+            else
+                return false;
+        }
+
         public List<EntityMetadata> GetEntities(string entityname = null)
         {
             var entityQueryExpression = new EntityQueryExpression
@@ -193,6 +206,117 @@ namespace CRMProcessExplorer
             }
 
             return result;
+        }
+
+        public List<Entity> RetrieveDependentComponents(Guid workflowId, string workflowName)
+        {
+            var request = new RetrieveDependentComponentsRequest
+            {
+                ObjectId = workflowId,
+                ComponentType = 29
+            };
+
+            var response = (RetrieveDependentComponentsResponse)Service.Execute(request);
+            var result = (EntityCollection)response.Results["EntityCollection"];
+            return result.Entities.ToList();
+        }
+
+        public List<Entity> RetrieveRequiredComponents(Guid workflowId, string workflowName)
+        {
+            var request = new RetrieveRequiredComponentsRequest
+            {
+                ObjectId = workflowId,
+                ComponentType = 29
+            };
+
+            var response = (RetrieveRequiredComponentsResponse)Service.Execute(request);
+            var result = (EntityCollection)response.Results["EntityCollection"];
+            return result.Entities.ToList();
+        }
+
+        public ProcessDetail GetPluginTypeById(EntityDetail entityDetail, Guid id)
+        {
+            var  pa = entityDetail.PluginAssemblies.Where(x => x.Id == id).FirstOrDefault();
+            if (pa == null)
+            {
+                var pt = Service.Retrieve("plugintype", id, new ColumnSet(new string[] { "name",  }));
+                pa = new ProcessDetail();
+                pa.Id = id;
+                pa.Name = pt.GetAttributeValueSafe<string>("name");
+                pa.Type = ProcessDetail.eTypes.PluginType;
+                entityDetail.PluginAssemblies.Add(pa);
+            }
+            return pa;
+        }
+
+        public ProcessDetail GetComponentByType(EntityDetail entityDetail, List<ProcessDetail> pdList, int type, Guid id)
+        {
+            ProcessDetail pd = null;
+            switch (type)
+            {
+                case 29:
+                    pd = pdList.Where(x => x.Id == id).FirstOrDefault();
+                    break;
+                case 90:
+                    pd = GetPluginTypeById(entityDetail, id);
+                    pd.Type = ProcessDetail.eTypes.PluginType;
+                    break;
+            }
+            return pd;
+        }
+
+        public List<ProcessDetail> GetWorkflowsByEntity(EntityDetail entityDetail)
+        {
+            if (entityDetail == null) return null;
+
+            List<ProcessDetail> processInfo = new List<ProcessDetail>();
+            QueryExpression query = new QueryExpression("workflow");
+            query.ColumnSet.AddColumns(new string[] {"mode", "primaryentity","name","scope","statecode","type",
+                                                     "uniquename","solutionid","category"});
+            query.Criteria.AddCondition("statecode", ConditionOperator.Equal, 1);
+            query.Criteria.AddCondition("type", ConditionOperator.Equal, 1);
+            query.Criteria.AddCondition("primaryentity", ConditionOperator.Equal, entityDetail.Metadata.LogicalName);
+
+            var wfList = Service.RetrieveMultiple(query);
+            foreach (var wf in wfList.Entities)
+            {
+                var workflow = new ProcessDetail();
+                var category = wf.GetAttributeValueSafe<OptionSetValue>("category").Value;
+                workflow.Category = (ProcessDetail.eCategories)category;
+                workflow.Type = ProcessDetail.eTypes.Workflow;
+                workflow.Id = wf.Id;
+                workflow.Name = wf.GetAttributeValueSafe<string>("name");
+                workflow.PrimaryEntityName = wf.GetAttributeValueSafe<string>("primaryentity");
+
+
+                processInfo.Add(workflow);
+            }
+
+            processInfo.ForEach(p => {
+                var rcList = RetrieveRequiredComponents(p.Id, p.Name);
+
+                rcList.ForEach(r =>
+                {
+                    int componentType = r.GetAttributeValueSafe<OptionSetValue>("requiredcomponenttype").Value;
+                });
+
+                foreach (var rc in rcList)
+                {
+                    var cType = rc.GetAttributeValue<OptionSetValue>("requiredcomponenttype").Value;
+                    var rcId = rc.GetAttributeValue<Guid>("requiredcomponentobjectid");
+
+                    if (cType == (int)ProcessDetail.eTypes.Workflow || cType == (int)ProcessDetail.eTypes.PluginType)
+                    {
+                        var w = GetComponentByType(entityDetail, processInfo, cType, rcId);
+                        if (w != null)
+                        {
+                            p.ChildProcess.Add(w);
+                        }
+                    }
+                }
+            });
+
+            return processInfo;
         }
     }
 }

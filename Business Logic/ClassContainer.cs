@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace CRMProcessExplorer
 {
@@ -14,6 +15,7 @@ namespace CRMProcessExplorer
         public string LogicalName { get; private set; }
         public string Name { get; private set; }
         public EntityMetadata Metadata { get; }
+        public List<ProcessDetail> PluginAssemblies { get; } = new List<ProcessDetail>();
 
         public EntityDetail(EntityMetadata em)
         {
@@ -32,6 +34,236 @@ namespace CRMProcessExplorer
         public override string ToString()
         {
             return Entity.GetAttributeValueSafe<string>("name");
+        }
+    }
+
+    public class ProcessDetail
+    {
+        public enum eCategories
+        {
+            Workflow = 0,
+            Dialog = 1,
+            BusinessRule = 2,
+            Action = 3,
+            BusinessProcessFlow = 4,
+        };
+
+        public enum eTypes 
+        {
+            Entity = 1,
+            Workflow = 29,
+            PluginType = 90
+        }
+
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string PrimaryEntityName { get; set; }
+        public List<ProcessDetail> ChildProcess { get; set; } = new List<ProcessDetail>();
+        public eCategories Category { get; set; }
+        public eTypes Type { get; set; }
+
+        public bool IsVisited { get; set; } = false;
+
+        public bool IsWorkflow
+        {
+            get
+            {
+                return this.Category == eCategories.Workflow;
+            }
+        }
+
+        public bool IsAssembly
+        {
+            get
+            {
+                return this.Type == eTypes.PluginType;
+            }
+        }
+
+        public bool IsEntity
+        {
+            get
+            {
+                return this.Type == eTypes.Entity;
+            }
+        }
+
+        public ProcessDetail()
+        {
+        }
+
+        public eCategories GetTypeByCategory(int category)
+        {
+            eCategories type;
+            switch (category)
+            {
+                case 0:
+                    type = eCategories.Workflow;
+                    break;
+                case 1:
+                    type = eCategories.Dialog;
+                    break;
+                case 2:
+                    type = eCategories.BusinessRule;
+                    break;
+                case 3:
+                    type = eCategories.Action;
+                    break;
+                default:
+                    type = eCategories.Workflow;
+                    break;
+            }
+
+            return type;
+        }
+
+        public List<ProcessDetail> Nodes { get; set; }
+
+        public ProcessDetail CloneMe()
+        {
+            var newNode = new ProcessDetail()
+            {
+                Name = this.Name,
+                Id = this.Id,
+                Category = this.Category,
+                Type = this.Type,
+                PrimaryEntityName = this.PrimaryEntityName,
+                IsVisited = this.IsVisited
+            };
+
+            foreach (var childNode in this.Nodes)
+            {
+                if (childNode.Type != eTypes.PluginType)
+                {
+                    var newChildNode = childNode.CloneMe();
+                    newNode.Nodes.Add(newChildNode);
+                }
+            }
+
+            return newNode;
+        }
+    }
+
+    public class ProcessDetailTN : TreeNode
+    {
+        public Guid Id { get; set; }
+        public string ComponentName { get; set; }
+        public string PrimaryEntityName { get; set; }
+        private ProcessDetail.eCategories _category;
+        public ProcessDetail.eCategories Category
+        {
+            get
+            {
+                return _category;
+            }
+            set
+            {
+                this._category = value;
+                SetImageIndex();
+            }
+        }
+        private ProcessDetail.eTypes _Type;
+        public ProcessDetail.eTypes Type
+        {
+            get
+            {
+                return _Type;
+            }
+            set
+            {
+                this._Type = value;
+                SetImageIndex();
+            }
+        }
+
+        public void SetImageIndex()
+        {
+            if (Type == ProcessDetail.eTypes.Workflow)
+            {
+                switch (Category)
+                {
+                    case ProcessDetail.eCategories.Workflow:
+                        this.Tag = "W";
+                        this.ImageIndex = 1;
+                        break;
+                    case ProcessDetail.eCategories.Action:
+                        this.Tag = "A";
+                        this.ImageIndex = 2;
+                        break;
+                    case ProcessDetail.eCategories.Dialog:
+                        this.Tag = "D";
+                        this.ImageIndex = 4;
+                        break;
+                    case ProcessDetail.eCategories.BusinessRule:
+                        this.Tag = "B";
+                        this.ImageIndex = 5;
+                        break;
+                    case ProcessDetail.eCategories.BusinessProcessFlow:
+                        this.Tag = "F";
+                        this.ImageIndex = 6;
+                        break;
+                }
+            }
+            else if (Type == ProcessDetail.eTypes.Entity)
+            {
+                this.Tag = "E";
+                this.ImageIndex = 0;
+            }
+            else if (Type == ProcessDetail.eTypes.PluginType)
+            {
+                this.Tag = "P";
+                this.ImageIndex = 3;
+            }
+        }
+
+        public int X { get; set; }
+        public int Y { get; set; }
+        public bool IsRoot { get; set; } = false;
+        public bool IsHidden { get; set; } = false;
+        public bool IsVisited { get; set; } = false;
+        public bool IsWorkflow
+        {
+            get
+            {
+                return this.Type == ProcessDetail.eTypes.Workflow;
+            }
+        }
+        public bool IsAssembly
+        {
+            get
+            {
+                return this.Type == ProcessDetail.eTypes.PluginType;
+            }
+        }
+        public bool IsEntity
+        {
+            get
+            {
+                return this.Type == ProcessDetail.eTypes.Entity;
+            }
+        }
+
+        public ProcessDetailTN CloneMe()
+        {
+            var  newNode = new ProcessDetailTN()
+            {
+                Name = this.Name,
+                Id = this.Id,
+                IsHidden = this.IsHidden,
+                Category = this.Category,
+                Type = this.Type,
+                Text = this.Text,
+                PrimaryEntityName = this.PrimaryEntityName,
+                IsVisited = this.IsVisited
+            };
+
+            foreach (ProcessDetailTN childNode in this.Nodes)
+            {
+                var newChildNode = childNode.CloneMe();
+                newNode.Nodes.Add(newChildNode);
+            }
+
+            return newNode;
         }
     }
 

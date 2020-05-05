@@ -188,7 +188,6 @@
             this.btnWFE.Size = new System.Drawing.Size(25, 24);
             this.btnWFE.TabIndex = 22;
             this.btnWFE.UseVisualStyleBackColor = true;
-            this.btnWFE.Visible = false;
             this.btnWFE.Click += new System.EventHandler(this.btnWFE_Click);
             // 
             // txtName
@@ -240,6 +239,7 @@
             this.txtID.Name = "txtID";
             this.txtID.Size = new System.Drawing.Size(425, 20);
             this.txtID.TabIndex = 16;
+            this.txtID.TextChanged += new System.EventHandler(this.txtID_TextChanged);
             // 
             // btnRetrieveEntities
             // 
