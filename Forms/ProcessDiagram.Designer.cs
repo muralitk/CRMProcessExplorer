@@ -34,6 +34,7 @@
             this.tPage = new System.Windows.Forms.TabPage();
             this.pbProcess = new System.Windows.Forms.PictureBox();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.scMain)).BeginInit();
             this.scMain.Panel1.SuspendLayout();
             this.scMain.Panel2.SuspendLayout();
@@ -83,6 +84,7 @@
             // tPage
             // 
             this.tPage.AutoScroll = true;
+            this.tPage.Controls.Add(this.label1);
             this.tPage.Controls.Add(this.pbProcess);
             this.tPage.Controls.Add(this.btnCancel);
             this.tPage.Location = new System.Drawing.Point(4, 22);
@@ -115,6 +117,16 @@
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.ForeColor = System.Drawing.SystemColors.ScrollBar;
+            this.label1.Location = new System.Drawing.Point(0, 1);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(142, 13);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "* Right click to save diagram";
             // 
             // ProcessDiagram
             // 
@@ -150,5 +162,6 @@
         private System.Windows.Forms.TabPage tPage;
         private System.Windows.Forms.PictureBox pbProcess;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.Label label1;
     }
 }

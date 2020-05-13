@@ -149,7 +149,10 @@ namespace CRMProcessExplorer
                     }
                     row[col++] = value;
                 }
-                row[col++] = node.SelectSingleNode(metadata.PrimaryIdAttribute)?.InnerText ?? node.SelectSingleNode(metadata.PrimaryIdAttribute)?.Value ?? string.Empty;
+                if(layoutXml.Contains("filter.primaryobjecttypecode"))
+                    row[col++] = node.SelectSingleNode("plugintypeid")?.InnerText ?? node.SelectSingleNode("plugintypeid")?.Value ?? string.Empty;
+                else
+                    row[col++] = node.SelectSingleNode(metadata.PrimaryIdAttribute)?.InnerText ?? node.SelectSingleNode(metadata.PrimaryIdAttribute)?.Value ?? string.Empty;
                 row[col++] = node.SelectSingleNode(metadata.PrimaryNameAttribute)?.InnerText ?? string.Empty;
                 row[col] = rows[loop - 1].OuterXml;
                 rowList.Add(row);

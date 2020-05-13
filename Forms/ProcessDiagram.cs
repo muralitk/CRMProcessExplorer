@@ -117,8 +117,10 @@ namespace CRMProcessExplorer
                     node.Expand();
                     node.ToolTipText = $"Double click to open CRM - {pNode.Type.ToStringNullSafe()}";
                 }
-                else if (pNode.Type == ProcessDetail.eTypes.PluginType)
+                else if (pNode.Type == ProcessDetail.eTypes.CustomCode && pNode.Category == ProcessDetail.eCategories.Workflow)
                     node.ToolTipText = $"{pNode.Type.ToStringNullSafe()}";
+                else if (pNode.Type == ProcessDetail.eTypes.CustomCode && pNode.Category == ProcessDetail.eCategories.Plugins)
+                    node.ToolTipText = $"{pNode.Category.ToStringNullSafe()}";
                 else
                     node.ToolTipText = $"Double click to open CRM - {pNode.Category.ToStringNullSafe()}";
 
@@ -148,8 +150,8 @@ namespace CRMProcessExplorer
 
         private void pbProcess_MouseHover(object sender, EventArgs e)
         {
-            var tt = new ToolTip();
-            tt.SetToolTip(this.pbProcess, "Right click to save diagram");
+            //var tt = new ToolTip();
+            //tt.SetToolTip(this.pbProcess, "Right click to save diagram");
         }
     }
 }

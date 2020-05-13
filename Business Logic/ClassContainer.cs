@@ -25,6 +25,10 @@ namespace CRMProcessExplorer
             DisplayName = em.DisplayName?.UserLocalizedLabel?.Label ?? "NULL";
             Name = string.Format("{0} [{1}]", DisplayName, LogicalName);
         }
+        public EntityDetail()
+        {
+
+        }
     }
 
     public class ViewDetail
@@ -46,13 +50,14 @@ namespace CRMProcessExplorer
             BusinessRule = 2,
             Action = 3,
             BusinessProcessFlow = 4,
+            Plugins = 5,
         };
 
         public enum eTypes 
         {
             Entity = 1,
             Workflow = 29,
-            PluginType = 90
+            CustomCode = 90
         }
 
         public Guid Id { get; set; }
@@ -76,7 +81,7 @@ namespace CRMProcessExplorer
         {
             get
             {
-                return this.Type == eTypes.PluginType;
+                return this.Type == eTypes.CustomCode;
             }
         }
 
@@ -133,7 +138,7 @@ namespace CRMProcessExplorer
 
             foreach (var childNode in this.Nodes)
             {
-                if (childNode.Type != eTypes.PluginType)
+                if (childNode.Type != eTypes.CustomCode)
                 {
                     var newChildNode = childNode.CloneMe();
                     newNode.Nodes.Add(newChildNode);
@@ -184,35 +189,32 @@ namespace CRMProcessExplorer
                 {
                     case ProcessDetail.eCategories.Workflow:
                         this.Tag = "W";
-                        this.ImageIndex = 1;
                         break;
                     case ProcessDetail.eCategories.Action:
                         this.Tag = "A";
-                        this.ImageIndex = 2;
                         break;
                     case ProcessDetail.eCategories.Dialog:
                         this.Tag = "D";
-                        this.ImageIndex = 4;
                         break;
                     case ProcessDetail.eCategories.BusinessRule:
                         this.Tag = "B";
-                        this.ImageIndex = 5;
                         break;
                     case ProcessDetail.eCategories.BusinessProcessFlow:
                         this.Tag = "F";
-                        this.ImageIndex = 6;
                         break;
                 }
             }
             else if (Type == ProcessDetail.eTypes.Entity)
             {
                 this.Tag = "E";
-                this.ImageIndex = 0;
             }
-            else if (Type == ProcessDetail.eTypes.PluginType)
+            else if (Type == ProcessDetail.eTypes.CustomCode && Category == ProcessDetail.eCategories.Workflow)
+            {
+                this.Tag = "C";
+            }
+            else if (Type == ProcessDetail.eTypes.CustomCode && Category == ProcessDetail.eCategories.Plugins)
             {
                 this.Tag = "P";
-                this.ImageIndex = 3;
             }
         }
 
@@ -232,7 +234,7 @@ namespace CRMProcessExplorer
         {
             get
             {
-                return this.Type == ProcessDetail.eTypes.PluginType;
+                return this.Type == ProcessDetail.eTypes.CustomCode;
             }
         }
         public bool IsEntity

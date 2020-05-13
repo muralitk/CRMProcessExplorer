@@ -30,11 +30,12 @@ namespace CRMProcessExplorer
         public Color _workflowBoxFillColor = Color.FromArgb(119, 173, 230); //#77ADE6
         public Color _entityBoxFillColor = Color.FromArgb(199, 42, 27); // #C72A1B
         public Color _actionBoxFillColor = Color.FromArgb(247, 247, 110); // #F7F76E
-        public Color _pluginBoxFillColor = Color.FromArgb(247, 173, 163); // #F7ADA3
+        public Color _pluginTypeBoxFillColor = Color.FromArgb(247, 173, 163); // #F7ADA3
         public Color _titleBoxFillColor = Color.LightGray;
         public Color _dialogBoxFillColor = Color.FromArgb(210, 217, 181); // #D2D9B5
         public Color _brBoxFillColor = Color.FromArgb(220, 110, 28); // #DC6E1C
         public Color _bpfBoxFillColor = Color.LightGreen;
+        public Color _pluginBoxFillColor = Color.FromArgb(48, 191, 223); // #30BFDF
 
 
         public bool ShowAssemblies { get; set; } = true;
@@ -71,7 +72,7 @@ namespace CRMProcessExplorer
 
         private void BuildTree(ProcessDetailTN oNode, int y)
         {
-            if (!ShowAssemblies && oNode.Type == ProcessDetail.eTypes.PluginType)
+            if (!ShowAssemblies && oNode.Type == ProcessDetail.eTypes.CustomCode)
                 oNode.IsHidden = true;
 
             foreach (ProcessDetailTN childNode in oNode.Nodes)
@@ -162,8 +163,17 @@ namespace CRMProcessExplorer
                 displayName = oNode.Text;
                 rectangleDisplayInfo = $"{rectangleDisplayInfo} ({oNode.PrimaryEntityName})";
             }
-            else if (oNode.Type == ProcessDetail.eTypes.PluginType)
+            else if (oNode.Type == ProcessDetail.eTypes.CustomCode && oNode.Category == ProcessDetail.eCategories.Workflow)
+            {
                 displayName = oNode.Type.ToString();
+            }
+            else if (oNode.Type == ProcessDetail.eTypes.CustomCode && oNode.Category == ProcessDetail.eCategories.Plugins)
+            {
+                displayName = oNode.Category.ToString();
+                string[] separatingStrings = { "::" };
+                var vals = rectangleDisplayInfo.Split(separatingStrings, System.StringSplitOptions.RemoveEmptyEntries);
+                if (vals.Length > 2) rectangleDisplayInfo = vals[0];
+            }
             else
                 displayName = oNode.Category.ToString();
 
@@ -318,9 +328,13 @@ namespace CRMProcessExplorer
                         break;
                 }
             }
-            else if (node.Type == ProcessDetail.eTypes.PluginType)
-                color = _pluginBoxFillColor;
-
+            else if (node.Type == ProcessDetail.eTypes.CustomCode)
+            {
+                if (node.Category == ProcessDetail.eCategories.Plugins)
+                    color = _pluginBoxFillColor;
+                else
+                    color = _pluginTypeBoxFillColor;
+            }
             return color;
         }
     }

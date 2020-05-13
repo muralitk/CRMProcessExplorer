@@ -221,7 +221,7 @@ namespace CRMProcessExplorer
             return result.Entities.ToList();
         }
 
-        public List<Entity> RetrieveRequiredComponents(Guid workflowId, string workflowName)
+        public List<Entity> RetrieveRequiredComponents(Guid workflowId)
         {
             var request = new RetrieveRequiredComponentsRequest
             {
@@ -243,7 +243,7 @@ namespace CRMProcessExplorer
                 pa = new ProcessDetail();
                 pa.Id = id;
                 pa.Name = pt.GetAttributeValueSafe<string>("name");
-                pa.Type = ProcessDetail.eTypes.PluginType;
+                pa.Type = ProcessDetail.eTypes.CustomCode;
                 entityDetail.PluginAssemblies.Add(pa);
             }
             return pa;
@@ -259,7 +259,7 @@ namespace CRMProcessExplorer
                     break;
                 case 90:
                     pd = GetPluginTypeById(entityDetail, id);
-                    pd.Type = ProcessDetail.eTypes.PluginType;
+                    pd.Type = ProcessDetail.eTypes.CustomCode;
                     break;
             }
             return pd;
@@ -293,7 +293,7 @@ namespace CRMProcessExplorer
             }
 
             processInfo.ForEach(p => {
-                var rcList = RetrieveRequiredComponents(p.Id, p.Name);
+                var rcList = RetrieveRequiredComponents(p.Id);
 
                 rcList.ForEach(r =>
                 {
@@ -305,7 +305,7 @@ namespace CRMProcessExplorer
                     var cType = rc.GetAttributeValue<OptionSetValue>("requiredcomponenttype").Value;
                     var rcId = rc.GetAttributeValue<Guid>("requiredcomponentobjectid");
 
-                    if (cType == (int)ProcessDetail.eTypes.Workflow || cType == (int)ProcessDetail.eTypes.PluginType)
+                    if (cType == (int)ProcessDetail.eTypes.Workflow || cType == (int)ProcessDetail.eTypes.CustomCode)
                     {
                         var w = GetComponentByType(entityDetail, processInfo, cType, rcId);
                         if (w != null)
@@ -316,7 +316,106 @@ namespace CRMProcessExplorer
                 }
             });
 
+            // get plugins info
+            var ppInfo = GetPluginsByEntity(entityDetail);
+            if (ppInfo != null && ppInfo.Count > 0) processInfo.AddRange(ppInfo);
+
             return processInfo;
+        }
+
+        public List<ProcessDetail> GetPluginsByEntity(EntityDetail entityDetail)
+        {
+            if (entityDetail == null) return null;
+            List<ProcessDetail> processInfo = new List<ProcessDetail>();
+            try
+            {
+
+                var layoutXml = @"<grid name='plugintype'>
+	                        <row>
+		                        <cell name='name' width='300' />
+		                        <cell name='assemblyname' width='150' />
+		                        <cell name='step.rank' width='100' />
+		                        <cell name='step.stage' width='100' />
+		                        <cell name='step.description' width='200' />
+		                        <cell name='step.impersonatinguserid' width='125' />
+		                        <cell name='step.sdkmessageid' width='125' />
+		                        <cell name='filter.primaryobjecttypecode' width='125' />
+                            </row></grid>";
+
+                var fetchXml = $@"<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='true' no-lock='true' >
+                      <entity name='plugintype' >
+                        <attribute name='plugintypeid' />
+                        <attribute name='assemblyname' />
+                        <attribute name='name' />
+                        <filter>
+                          <condition attribute='componentstate' operator='eq' value='0' />
+                        </filter>
+                        <link-entity name='sdkmessageprocessingstep' from='plugintypeid' to='plugintypeid' link-type='inner' alias='step' >
+                          <attribute name='rank' />
+                          <attribute name='stage' />
+                          <attribute name='description' />
+                          <attribute name='impersonatinguserid' />
+                          <attribute name='sdkmessageid' />
+                          <filter>
+                            <condition attribute='ishidden' operator='eq' value='0' />
+                            <condition attribute='iscustomizable' operator='eq' value='1' />
+                            <condition attribute='invocationsource' operator='eq' value='0' />
+                          </filter>
+                          <link-entity name='sdkmessagefilter' from='sdkmessagefilterid' to='sdkmessagefilterid' link-type='outer' alias='filter' >
+                            <attribute name='primaryobjecttypecode' />
+                            <filter type='and' >
+                              <condition attribute='primaryobjecttypecode' operator='in' >
+                                <value>0</value>
+                                <value>{entityDetail.Metadata.ObjectTypeCode}</value>
+                              </condition>
+                              <condition attribute='isvisible' operator='eq' value='1' />
+                              <condition attribute='componentstate' operator='eq' value='0' />
+                            </filter>
+                          </link-entity>
+                        </link-entity>
+                        <link-entity name='pluginassembly' from='pluginassemblyid' to='pluginassemblyid' link-type='inner' alias='assembly' >
+                          <filter>
+                            <condition attribute='componentstate' operator='eq' value='0' />
+                            <condition attribute='iscustomizable' operator='eq' value='1' />
+                            <condition attribute='ishidden' operator='eq' value='0' />
+                            <condition attribute='ismanaged' operator='eq' value='0' />
+                          </filter>
+                        </link-entity>
+                      </entity>
+                    </fetch>";
+
+                var resultXml = ExecuteFetchXML(fetchXml);
+                var isMoreRecords = false;
+                var rowList = Helper.ProcessXML(entityDetail.Metadata, layoutXml, resultXml, out isMoreRecords);
+                rowList.ForEach(r =>
+                {
+                    var rLength = r.Length;
+                    var workflow = new ProcessDetail();
+                    workflow.Category = ProcessDetail.eCategories.Plugins;
+                    workflow.Type = ProcessDetail.eTypes.CustomCode;
+                    workflow.Id = new Guid(r[rLength - 3].ToStringNullSafe());
+                    workflow.Name = GetName(r, rLength);
+                    workflow.PrimaryEntityName = entityDetail.Metadata.LogicalName;
+
+                    processInfo.Add(workflow);
+                });
+            }
+            catch { }
+            return processInfo;
+        }
+
+        private string GetName(object[] row, int rLength)
+        {
+            if (rLength > 11)
+            {
+                //Name::Message::Calling User/??
+                return $"{row[1]}::{row[7]}::{(string.IsNullOrEmpty(row[6].ToStringNullSafe()) ? "Calling User" : row[6])}";
+            }
+            else
+            {
+                // Name
+                return row[rLength - 2].ToStringNullSafe();
+            }
         }
     }
 }
